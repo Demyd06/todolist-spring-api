@@ -6,13 +6,12 @@ package com.example.todolist.dto;
  * <p>
  * Date: 14.07.2026
  * <p>
- * Time: 21:51
+ * Time: 21:50
  * <p>
  * Project name: ToDoList
  */
-public record TaskResponse(
-        String taskID,
+public record TaskCreateRequest(
         String title,
-        String status
+        String description
 ) {
 }
