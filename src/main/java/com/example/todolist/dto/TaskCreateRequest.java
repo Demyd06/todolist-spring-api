@@ -1,5 +1,7 @@
 package com.example.todolist.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 /**
  *
  * Created by: Demyd Titenko
@@ -12,6 +14,7 @@ package com.example.todolist.dto;
  */
 public record TaskCreateRequest(
         String title,
+        @NotBlank(message = "Description is required")
         String description
 ) {
 }

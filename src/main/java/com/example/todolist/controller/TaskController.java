@@ -3,6 +3,7 @@ package com.example.todolist.controller;
 import com.example.todolist.dto.TaskCreateRequest;
 import com.example.todolist.dto.TaskResponse;
 import com.example.todolist.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping("/tasks")
-    public TaskResponse createTask(@RequestBody(required = false) TaskCreateRequest taskCreateRequest){
+    public TaskResponse createTask(@Valid @RequestBody(required = false) TaskCreateRequest taskCreateRequest){
         return taskService.createTask(taskCreateRequest);
     }
 }
