@@ -25,7 +25,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping("/tasks")
-    public TaskResponse createTask(@Valid @RequestBody(required = false) TaskCreateRequest taskCreateRequest){
+    public TaskResponse createTask(@Valid @RequestBody() TaskCreateRequest taskCreateRequest){
         return taskService.createTask(taskCreateRequest);
     }
 }

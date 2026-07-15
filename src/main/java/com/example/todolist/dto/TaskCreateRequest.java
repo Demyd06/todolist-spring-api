@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotBlank;
  * Project name: ToDoList
  */
 public record TaskCreateRequest(
+        @NotBlank(message = "Title is required")
         String title,
         @NotBlank(message = "Description is required")
         String description
