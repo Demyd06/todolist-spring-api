@@ -1,7 +1,5 @@
 package com.example.todolist.dto;
 
-import jakarta.validation.constraints.NotNull;
-
 /**
  *
  * Created by: Demyd Titenko
@@ -13,7 +11,6 @@ import jakarta.validation.constraints.NotNull;
  * Project name: ToDoList
  */
 public record TaskResponse(
-        @NotNull(message = "TaskID is required")
         String taskID,
         String title,
         String status
