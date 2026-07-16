@@ -5,9 +5,12 @@ import com.example.todolist.dto.TaskResponse;
 import com.example.todolist.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  *
@@ -27,5 +30,10 @@ public class TaskController {
     @PostMapping("/tasks")
     public TaskResponse createTask(@Valid @RequestBody() TaskCreateRequest taskCreateRequest){
         return taskService.createTask(taskCreateRequest);
+    }
+
+    @GetMapping("/tasks")
+    public List<TaskResponse> getAllTasks(){
+        return taskService.getAllTasks();
     }
 }

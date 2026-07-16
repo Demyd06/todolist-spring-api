@@ -7,6 +7,9 @@ import com.example.todolist.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  *
  * Created by: Demyd Titenko
@@ -34,5 +37,16 @@ public class TaskService {
                 saveTask.getTitle(),
                 saveTask.getStatus()
         );
+    }
+
+    public List<TaskResponse> getAllTasks(){
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream()
+                        .map(task -> new TaskResponse(
+                            task.getId().toString(),
+                            task.getTitle(),
+                            task.getStatus()
+                        ))
+                .toList();
     }
 }
