@@ -5,10 +5,7 @@ import com.example.todolist.dto.TaskResponse;
 import com.example.todolist.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,12 +25,22 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping("/tasks")
-    public TaskResponse createTask(@Valid @RequestBody() TaskCreateRequest taskCreateRequest){
-        return taskService.createTask(taskCreateRequest);
+    public TaskResponse createTask(@Valid @RequestBody() TaskCreateRequest request){
+        return taskService.createTask(request);
     }
 
     @GetMapping("/tasks")
     public List<TaskResponse> getAllTasks(){
         return taskService.getAllTasks();
+    }
+
+    @DeleteMapping("/tasks/{id}")
+    public String deleteTask(@PathVariable Long id){
+        return taskService.deleteTask(id);
+    }
+
+    @PutMapping("/tasks/{id}")
+    public TaskResponse updateTask(@PathVariable Long id, @Valid @RequestBody TaskCreateRequest request){
+        return taskService.updateTask(id, request);
     }
 }

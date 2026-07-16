@@ -49,4 +49,28 @@ public class TaskService {
                         ))
                 .toList();
     }
+
+    public String deleteTask(Long id){
+        if(taskRepository.existsById(id)){
+            taskRepository.deleteById(id);
+            return "Task with id: " + id + " deleted";
+        }
+        return "Task with id: " + id + " not found";
+    }
+
+    public TaskResponse updateTask(Long id, TaskCreateRequest taskCreateRequest){
+        Task exitingTask = taskRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Task with id: " + id + " not found"));
+
+        exitingTask.setTitle(taskCreateRequest.title());
+        exitingTask.setDescription(taskCreateRequest.description());
+        exitingTask.setStatus("UPDATED");
+
+        taskRepository.save(exitingTask);
+        return new TaskResponse(
+                exitingTask.getId().toString(),
+                exitingTask.getTitle(),
+                exitingTask.getStatus()
+        );
+    }
 }
