@@ -3,6 +3,7 @@ package com.example.todolist.service;
 import com.example.todolist.dto.TaskCreateRequest;
 import com.example.todolist.dto.TaskResponse;
 import com.example.todolist.entity.Task;
+import com.example.todolist.exception.TaskNotFoundException;
 import com.example.todolist.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -60,7 +61,7 @@ public class TaskService {
 
     public TaskResponse updateTask(Long id, TaskCreateRequest taskCreateRequest){
         Task exitingTask = taskRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Task with id: " + id + " not found"));
+                () -> new TaskNotFoundException("Task with id: " + id + " not found"));
 
         exitingTask.setTitle(taskCreateRequest.title());
         exitingTask.setDescription(taskCreateRequest.description());

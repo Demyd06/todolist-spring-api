@@ -24,4 +24,10 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleValidationExceptions(MethodArgumentNotValidException e){
         return new ErrorResponse(e.getBindingResult().getFieldError().getDefaultMessage());
     }
+
+    @ExceptionHandler(TaskNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleTaskNotFoundException(TaskNotFoundException e){
+        return new ErrorResponse(e.getMessage());
+    }
 }
