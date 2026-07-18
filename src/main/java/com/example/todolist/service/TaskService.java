@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -79,5 +78,14 @@ public class TaskService {
                 exitingTask.getTitle(),
                 exitingTask.getStatus()
         );
+    }
+
+    public List<TaskResponse> getTaskByUserId(Long userId){
+        return taskRepository.findByUserId(userId).stream()
+                .map(task -> new TaskResponse(
+                        task.getId().toString(),
+                        task.getTitle(),
+                        task.getStatus()))
+                .toList();
     }
 }
