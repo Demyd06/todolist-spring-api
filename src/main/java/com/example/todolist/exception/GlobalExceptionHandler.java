@@ -30,4 +30,10 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleTaskNotFoundException(TaskNotFoundException e){
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleUserNotFoundException(UserNotFoundException e){
+        return new ErrorResponse(e.getMessage());
+    }
 }

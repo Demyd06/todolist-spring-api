@@ -1,6 +1,7 @@
 package com.example.todolist.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  *
@@ -16,6 +17,8 @@ public record TaskCreateRequest(
         @NotBlank(message = "Title is required")
         String title,
         @NotBlank(message = "Description is required")
-        String description
+        String description,
+        @NotNull(message = "User ID is required")
+        Long userId
 ) {
 }

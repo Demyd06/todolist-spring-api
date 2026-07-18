@@ -3,8 +3,11 @@ package com.example.todolist.service;
 import com.example.todolist.dto.TaskCreateRequest;
 import com.example.todolist.dto.TaskResponse;
 import com.example.todolist.entity.Task;
+import com.example.todolist.entity.User;
 import com.example.todolist.exception.TaskNotFoundException;
+import com.example.todolist.exception.UserNotFoundException;
 import com.example.todolist.repository.TaskRepository;
+import com.example.todolist.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +28,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     public TaskResponse createTask(TaskCreateRequest taskCreateRequest){
+        User user = userRepository.findById(taskCreateRequest.userId()).orElseThrow(() -> new UserNotFoundException("User not found"));
         Task task = new Task();
         task.setTitle(taskCreateRequest.title());
         task.setDescription(taskCreateRequest.description());
         task.setStatus("CREATED");
+        task.setUser(user);
 
         Task saveTask = taskRepository.save(task);
         return new TaskResponse(
