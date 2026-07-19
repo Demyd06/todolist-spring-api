@@ -34,4 +34,12 @@ public class UserService {
                 newUser.getUsername(),
                 newUser.getEmail());
     }
+
+    public String deleteUser(Long userId){
+        if(userRepository.existsById(userId)){
+            userRepository.deleteById(userId);
+            return "User with id: " + userId + " deleted";
+        }
+        return "User with id: " + userId + " not found";
+    }
 }
