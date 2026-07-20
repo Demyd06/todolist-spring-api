@@ -5,6 +5,7 @@ import com.example.todolist.dto.UserResponse;
 import com.example.todolist.entity.User;
 import com.example.todolist.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,11 +22,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreateRequest request){
         User newUser = new User();
         newUser.setUsername(request.username());
-        newUser.setPassword(request.password());
+        newUser.setPassword(passwordEncoder.encode(request.password()));
         newUser.setEmail(request.email());
 
         userRepository.save(newUser);
