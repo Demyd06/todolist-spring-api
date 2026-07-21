@@ -3,6 +3,8 @@ package com.example.todolist.repository;
 import com.example.todolist.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 /**
  *
  * Created by: Demyd Titenko
@@ -14,4 +16,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Project name: ToDoList
  */
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUsername(String username);
 }
