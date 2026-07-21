@@ -9,6 +9,8 @@ import com.example.todolist.exception.UserNotFoundException;
 import com.example.todolist.repository.TaskRepository;
 import com.example.todolist.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,23 +32,35 @@ public class TaskService {
     private final UserRepository userRepository;
 
     public TaskResponse createTask(TaskCreateRequest taskCreateRequest){
-        User user = userRepository.findById(taskCreateRequest.userId()).orElseThrow(() -> new UserNotFoundException("User not found"));
-        Task task = new Task();
-        task.setTitle(taskCreateRequest.title());
-        task.setDescription(taskCreateRequest.description());
-        task.setStatus("CREATED");
-        task.setUser(user);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
 
-        Task saveTask = taskRepository.save(task);
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new UserNotFoundException("User not found with this username"));
+
+        Task newTask = new Task();
+        newTask.setTitle(taskCreateRequest.title());
+        newTask.setDescription(taskCreateRequest.description());
+        newTask.setStatus("CREATED");
+        newTask.setUser(currentUser);
+
+        taskRepository.save(newTask);
+
         return new TaskResponse(
-                saveTask.getId().toString(),
-                saveTask.getTitle(),
-                saveTask.getStatus()
+                newTask.getId().toString(),
+                newTask.getTitle(),
+                newTask.getStatus()
         );
     }
 
     public List<TaskResponse> getAllTasks(){
-        List<Task> tasks = taskRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        User user = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new UserNotFoundException("User not found with this username"));
+
+        List<Task> tasks = taskRepository.findByUserId(user.getId());
         return tasks.stream()
                         .map(task -> new TaskResponse(
                             task.getId().toString(),
