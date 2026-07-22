@@ -1,8 +1,12 @@
 package com.example.todolist.service;
 
 import com.example.todolist.dto.UserCreateRequest;
+import com.example.todolist.dto.UserLoginRequest;
+import com.example.todolist.dto.UserLoginResponse;
 import com.example.todolist.dto.UserResponse;
 import com.example.todolist.entity.User;
+import com.example.todolist.exception.UserInvalidPasswordException;
+import com.example.todolist.exception.UserNotFoundException;
 import com.example.todolist.repository.UserRepository;
 import com.example.todolist.security.CustomUserDetails;
 import com.example.todolist.security.JwtService;
@@ -51,5 +55,20 @@ public class UserService {
             return "User with id: " + userId + " deleted";
         }
         return "User with id: " + userId + " not found";
+    }
+
+    public UserLoginResponse loginUser(UserLoginRequest request){
+        User findUser = userRepository.findByUsername(request.username()).orElseThrow(
+                () -> new UserNotFoundException("User not found with this username"));
+        if(!passwordEncoder.matches(request.password(), findUser.getPassword())) {
+            throw new UserInvalidPasswordException("Invalid password");
+        }
+        UserDetails userDetails = new CustomUserDetails(findUser);
+        String message = "Login successful";
+        String token = jwtService.generateToken(userDetails);
+        return new UserLoginResponse(
+                message,
+                token
+        );
     }
 }

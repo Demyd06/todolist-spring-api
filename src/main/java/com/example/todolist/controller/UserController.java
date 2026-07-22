@@ -1,8 +1,6 @@
 package com.example.todolist.controller;
 
-import com.example.todolist.dto.TaskResponse;
-import com.example.todolist.dto.UserCreateRequest;
-import com.example.todolist.dto.UserResponse;
+import com.example.todolist.dto.*;
 import com.example.todolist.service.TaskService;
 import com.example.todolist.service.UserService;
 import jakarta.validation.Valid;
@@ -40,5 +38,10 @@ public class UserController {
     @DeleteMapping("/users/{userId}")
     public String deleteUser(@PathVariable Long userId){
         return userService.deleteUser(userId);
+    }
+
+    @PostMapping("/users/login")
+    public UserLoginResponse loginUser(@Valid @RequestBody UserLoginRequest request){
+        return userService.loginUser(request);
     }
 }
