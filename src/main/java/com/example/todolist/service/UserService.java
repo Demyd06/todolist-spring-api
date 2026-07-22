@@ -4,7 +4,10 @@ import com.example.todolist.dto.UserCreateRequest;
 import com.example.todolist.dto.UserResponse;
 import com.example.todolist.entity.User;
 import com.example.todolist.repository.UserRepository;
+import com.example.todolist.security.CustomUserDetails;
+import com.example.todolist.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public UserResponse createUser(UserCreateRequest request){
         User newUser = new User();
@@ -30,11 +34,15 @@ public class UserService {
         newUser.setPassword(passwordEncoder.encode(request.password()));
         newUser.setEmail(request.email());
 
-        userRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
+        UserDetails userDetails = new CustomUserDetails(savedUser);
+
+        String token = jwtService.generateToken(userDetails);
         return new UserResponse(
-                newUser.getId(),
-                newUser.getUsername(),
-                newUser.getEmail());
+                savedUser.getId(),
+                savedUser.getUsername(),
+                savedUser.getEmail(),
+                token);
     }
 
     public String deleteUser(Long userId){
