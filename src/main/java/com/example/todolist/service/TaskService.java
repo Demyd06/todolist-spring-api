@@ -9,6 +9,8 @@ import com.example.todolist.exception.UserNotFoundException;
 import com.example.todolist.repository.TaskRepository;
 import com.example.todolist.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -53,21 +55,19 @@ public class TaskService {
         );
     }
 
-    public List<TaskResponse> getAllTasks(){
+    public Page<TaskResponse> getAllTasks(Pageable pageable){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
 
         User user = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new UserNotFoundException("User not found with this username"));
 
-        List<Task> tasks = taskRepository.findByUserId(user.getId());
-        return tasks.stream()
-                        .map(task -> new TaskResponse(
+        Page<Task> tasks = taskRepository.findByUserId(user.getId(), pageable);
+        return tasks.map(task -> new TaskResponse(
                             task.getId().toString(),
                             task.getTitle(),
                             task.getStatus()
-                        ))
-                .toList();
+                        ));
     }
 
     public String deleteTask(Long id){
@@ -94,12 +94,15 @@ public class TaskService {
         );
     }
 
-    public List<TaskResponse> getTaskByUserId(Long userId){
-        return taskRepository.findByUserId(userId).stream()
+    public Page<TaskResponse> getTaskByUserId(Long userId, Pageable pageable){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new UserNotFoundException("User not found with this username"));
+        return taskRepository.findByUserId(currentUser.getId(), pageable)
                 .map(task -> new TaskResponse(
                         task.getId().toString(),
                         task.getTitle(),
-                        task.getStatus()))
-                .toList();
+                        task.getStatus()
+                ));
     }
 }

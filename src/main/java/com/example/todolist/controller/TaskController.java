@@ -5,6 +5,11 @@ import com.example.todolist.dto.TaskResponse;
 import com.example.todolist.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +35,12 @@ public class TaskController {
     }
 
     @GetMapping("/tasks")
-    public List<TaskResponse> getAllTasks(){
-        return taskService.getAllTasks();
+    public Page<TaskResponse> getAllTasks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return taskService.getAllTasks(pageable);
     }
 
     @DeleteMapping("/tasks/{id}")
