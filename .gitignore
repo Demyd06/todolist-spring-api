@@ -31,4 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Custom properties
 src/main/resources/application.yml
+*.env
